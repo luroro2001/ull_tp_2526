@@ -1,4 +1,4 @@
-program nbody_bh_mpi
+program main_mpi
     use mpi
     use geometry
     use particle
@@ -15,27 +15,27 @@ program nbody_bh_mpi
     integer :: i
     integer :: output_unit
 
-    !========================================================
+    !---------------------------------------------------------
     ! MPI initialization
-    !========================================================
+    !---------------------------------------------------------
     call MPI_Init(ierr)
     call MPI_Comm_size(MPI_COMM_WORLD, p, ierr)
     call MPI_Comm_rank(MPI_COMM_WORLD, my_rank, ierr)
     call MPI_Barrier(MPI_COMM_WORLD, ierr)
     t_i = MPI_Wtime()
 
-    !========================================================
+    !---------------------------------------------------------
     ! Open output file
-    !========================================================
+    !---------------------------------------------------------
 
     if (my_rank == 0) then
         output_unit = 10
         open(unit=output_unit, file="output.dat", status="replace", action="write")
     end if
 
-    !========================================================
+    !---------------------------------------------------------
     ! Read input on master
-    !========================================================
+    !---------------------------------------------------------
     if (my_rank == 0) then
         read(*,*) dt
         read(*,*) dt_out
@@ -43,23 +43,23 @@ program nbody_bh_mpi
         read(*,*) n
     end if
 
-    !========================================================
+    !---------------------------------------------------------
     ! Broadcast parameters
-    !========================================================
+    !---------------------------------------------------------
     call MPI_Bcast(n,      1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(dt,     1, MPI_REAL8,   0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(dt_out, 1, MPI_REAL8,   0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(t_end,  1, MPI_REAL8,   0, MPI_COMM_WORLD, ierr)
 
-    !========================================================
+    !---------------------------------------------------------
     ! Allocate arrays on all processes
-    !========================================================
+    !---------------------------------------------------------
     allocate(parts(n))
     allocate(a(n))
 
-    !========================================================
+    !---------------------------------------------------------
     ! Read particles on master
-    !========================================================
+    !---------------------------------------------------------
     if (my_rank == 0) then
         do i = 1, n
             read(*,*) parts(i)%m, &
@@ -68,9 +68,9 @@ program nbody_bh_mpi
         end do
     end if
 
-    !========================================================
+    !---------------------------------------------------------
     ! Broadcast particle data
-    !========================================================
+    !---------------------------------------------------------
     call MPI_Bcast(parts(:)%m,   n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(parts(:)%p%x, n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(parts(:)%p%y, n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
@@ -79,16 +79,16 @@ program nbody_bh_mpi
     call MPI_Bcast(parts(:)%v%y, n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(parts(:)%v%z, n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
 
-    !========================================================
+    !---------------------------------------------------------
     ! Work partitioning
-    !========================================================
+    !---------------------------------------------------------
     my_n     = n / p
     my_start = my_rank * my_n + 1
     my_end   = my_start + my_n - 1
 
-    !========================================================
+    !---------------------------------------------------------
     ! Build initial Barnes–Hut tree
-    !========================================================
+    !---------------------------------------------------------
     allocate(head)
     call calculate_ranges(head)
     head%type = 0
@@ -102,15 +102,15 @@ program nbody_bh_mpi
     call borrar_empty_leaves(head)
     call calculate_masses(head)
 
-    !========================================================
+    !---------------------------------------------------------
     ! Initial accelerations (local block only)
-    !========================================================
+    !---------------------------------------------------------
     a(my_start:my_end) = vector3d(0.0_dp, 0.0_dp, 0.0_dp)
     call calculate_forces_mpi(head, my_start, my_end)
 
-    !========================================================
+    !---------------------------------------------------------
     ! Time integration loop
-    !========================================================
+    !---------------------------------------------------------
     t_out = 0.0_dp
     t = 0.0_dp
 
@@ -188,4 +188,4 @@ program nbody_bh_mpi
     
     call MPI_Finalize(ierr)
 
-end program nbody_bh_mpi
+end program main_mpi

@@ -8,14 +8,15 @@ OMPFLAGS = -fopenmp
 
 ## Source files
 #OBJECTS = geometry.o particle.o bh.o main.o
-SRC = geometry.f90 particle.f90 bh.f90 main.f90
-SRC_MPI    = geometry.f90 particle.f90 bh.f90 main_mpi.f90
+SRC = openmp/geometry.f90 openmp/particle.f90 openmp/bh.f90 openmp/main.f90
+SRC_MPI    = mpi/geometry.f90 mpi/particle.f90 mpi/bh.f90 mpi/main_mpi.f90
 
 ## Targets (default: serial)
 all: nbody_bh
 
+# In serial, I enabled openmp just to avoid issues with 'omp_get_wtime':
 nbody_bh: $(SRC)
-	$(FC) $(FCFLAGS) $(OMPFLAGS) -o $@ $(SRC)
+	$(FC) $(FCFLAGS) $(OMPFLAGS) -o $@ $(SRC) 
 
 # OpenMP version
 nbody_bh_omp: $(SRC)
