@@ -1,12 +1,12 @@
 # Exercise 2: Barnes Hut N-body simulation
 
-This exercise consists in the implementation of an N-body gravitational simulation using the Barnes-Hut algorithm to reduce computational complexity from \(\mathcal{O}(N^2)\) to approximately \(\mathcal{O}(N \log N)\).
+This exercise consists in the implementation of an N-body gravitational simulation using the Barnes-Hut algorithm to reduce computational complexity from $\mathcal{O}(N^2)$ to approximately $\mathcal{O}(N \log N)$.
 
 Three versions of the code are provided:
 
-- **Serial** implementation  
-- **Shared-memory parallel** version using **OpenMP**  
-- **Distributed-memory parallel** version using **MPI**
+- Serial implementation  
+- Shared-memory parallel version using OpenMP 
+- Distributed-memory parallel version using MPI
 
 
 ## Project structure
@@ -125,6 +125,7 @@ Implements a distributed-memory version using MPI.
 ## Tutorial
 
 1. Prerequisites
+
 You must have installed:
 - `gfortran`
 - `OpenMP` support
