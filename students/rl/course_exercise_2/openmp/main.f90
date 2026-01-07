@@ -65,12 +65,10 @@ program main
 
     do while (t < t_end)
 
-        ! Half kick
         do i = 1, n
             parts(i)%v = parts(i)%v + a(i) * (dt/2.0_dp)
         end do
 
-        ! Drift
         do i = 1, n
             parts(i)%p = parts(i)%p + parts(i)%v * dt
         end do
@@ -90,16 +88,15 @@ program main
         call calculate_masses(head)
 
         ! Compute new aelerations
-        a = vector3d(0.0_dp, 0.0_dp, 0.0_dp) !check calculate_forces, this might be redundant
+        a = vector3d(0.0_dp, 0.0_dp, 0.0_dp) !NOTE: check calculate_forces, this might be redundant
         call calculate_forces(head)
 
-        ! Half kick
         do i = 1, n
             parts(i)%v = parts(i)%v + a(i) * (dt/2.0_dp)
         end do
 
         !-----------------------------------------------------
-        ! Output (for now: first 10 particles, like original)
+        ! Output 
         !-----------------------------------------------------
         t_out = t_out + dt
         if (t_out >= dt_out) then

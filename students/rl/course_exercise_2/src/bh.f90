@@ -10,7 +10,7 @@ module barnes_hut
     ! Number of particles
     integer :: n
 
-    ! Particle array (provided / owned by main)
+    ! Particle array 
     type(particle3d), allocatable :: parts(:)
 
     ! Accelerations
@@ -28,7 +28,7 @@ module barnes_hut
     end type cptr
 
     !=========================================================
-    ! Barnes–Hut cell (faithful to original)
+    ! Barnes–Hut cell 
     !=========================================================
     type :: cell
         type(range) :: range
@@ -122,7 +122,7 @@ contains
     end subroutine place_cell
 
 !===========================================================
-! Crear_Subcells
+! Create_Subcells
 !===========================================================
     subroutine crear_subcells(goal)
         type(cell), pointer :: goal
@@ -193,7 +193,7 @@ contains
     end function belongs
 
 !===========================================================
-! Calcular_Range
+! Calculate_Range
 !===========================================================
     function calcular_range(what, goal, octant) result(r)
         integer, intent(in) :: what
@@ -218,7 +218,7 @@ contains
     end function calcular_range
 
 !===========================================================
-! Borrar_empty_leaves
+! Delete_empty_leaves
 !===========================================================
     recursive subroutine borrar_empty_leaves(goal)
         type(cell), pointer :: goal
@@ -239,7 +239,7 @@ contains
     end subroutine borrar_empty_leaves
 
 !===========================================================
-! Borrar_tree
+! Delete_tree
 !===========================================================
     recursive subroutine borrar_tree(goal)
         type(cell), pointer :: goal
@@ -341,8 +341,8 @@ contains
             if (idx /= tree%pos) then
                 rji = tree%c_o_m - parts(idx)%p
                 r2 = dot_prod(rji, rji)
-                r3 = r2 * sqrt(r2)
-                a(idx) = a(idx) + (parts(tree%pos)%m / r3) * rji
+                r3 = r2*sqrt(r2)
+                a(idx) = a(idx) + (parts(tree%pos)%m / r3)*rji
             end if
 
         case (2)

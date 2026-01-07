@@ -44,7 +44,7 @@ program main_mpi
     end if
 
     !---------------------------------------------------------
-    ! Broadcast parameters
+    ! Broadcast parameters to the others
     !---------------------------------------------------------
     call MPI_Bcast(n,      1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(dt,     1, MPI_REAL8,   0, MPI_COMM_WORLD, ierr)
@@ -69,7 +69,7 @@ program main_mpi
     end if
 
     !---------------------------------------------------------
-    ! Broadcast particle data
+    ! Broadcast particle data to the others
     !---------------------------------------------------------
     call MPI_Bcast(parts(:)%m,   n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
     call MPI_Bcast(parts(:)%p%x, n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
@@ -80,11 +80,13 @@ program main_mpi
     call MPI_Bcast(parts(:)%v%z, n, MPI_REAL8, 0, MPI_COMM_WORLD, ierr)
 
     !---------------------------------------------------------
-    ! Work partitioning
+    ! Work partitioning; from here on there is no master/slave distinction,
+    ! all processors collaborate equally
+    ! (except when printing and performing the time check)
     !---------------------------------------------------------
-    my_n     = n / p
-    my_start = my_rank * my_n + 1
-    my_end   = my_start + my_n - 1
+    my_n     = n/p
+    my_start = my_rank*my_n+1
+    my_end   = my_start+my_n-1
 
     !---------------------------------------------------------
     ! Build initial Barnes–Hut tree
@@ -118,12 +120,12 @@ program main_mpi
 
         ! Velocity half step
         do i = my_start, my_end
-            parts(i)%v = parts(i)%v + a(i) * (dt / 2.0_dp)
+            parts(i)%v = parts(i)%v + a(i)*(dt/2.0_dp)
         end do
 
         ! Position update
         do i = my_start, my_end
-            parts(i)%p = parts(i)%p + parts(i)%v * dt
+            parts(i)%p = parts(i)%p + parts(i)%v*dt
         end do
 
         ! Synchronize positions
@@ -180,6 +182,7 @@ program main_mpi
     call MPI_Barrier(MPI_COMM_WORLD, ierr)
     t_f = MPI_Wtime()
 
+    ! Print execution time 
     if (my_rank == 0) then
         close(output_unit)
         print*, "Simulation complete. Output written to output.dat"

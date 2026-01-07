@@ -59,8 +59,3 @@ program generate_input
     end do
 
 end program generate_input
-
-
-! To compile: gfortran -O2 -o generate_input sphere_generator.f90
-
-! Run with 10000 particles: echo 10000 | ./generate_input > input.dat
