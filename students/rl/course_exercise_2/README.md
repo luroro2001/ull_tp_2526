@@ -124,8 +124,7 @@ Implements a distributed-memory version using MPI.
 
 ## Tutorial
 
-1. Prerequisites.
-
+1. Prerequisites
 You must have installed:
 - `gfortran`
 - `OpenMP` support
@@ -185,4 +184,6 @@ Serial: 27.422356600000057
 OpenMP: 29.105342273998758 
 MPI: 27.239613327000001
 
-**PENDING**: running more cases with different thread counts and N. Possibly plotting them.
+**PENDING**: fix whatever is going on, extend to larger N?, compare scaling with diferent thread/process counts, plot execution time vs N.
+
+**LIMITATIONS / POSSIBLE ISSUES**: no softening parameter is currently included, the MPI implementation assumes N is divisible by the number of processes.
