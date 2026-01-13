@@ -162,7 +162,6 @@ program main_mpi
         ! Output (master only)
         t_out = t_out + dt
         if (my_rank == 0) then
-            t_out = t_out + dt
             if (t_out >= dt_out) then
 
                 write(output_unit, '(ES20.10)', advance='no') t
