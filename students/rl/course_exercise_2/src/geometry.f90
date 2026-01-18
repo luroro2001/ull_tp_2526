@@ -116,7 +116,7 @@ contains
     ! distance: returns distance between two 3D points
     pure real(dp) function distance(p1, p2)
         type(point3d), intent(in) :: p1, p2
-        distance = sqrt((p2%x - p1%x)**2 + (p2%y - p1%y)**2 + (p2%z - p1%z))
+        distance = sqrt((p2%x - p1%x)**2 + (p2%y - p1%y)**2 + (p2%z - p1%z)**2)
     end function distance
         
     ! norm: calculates the norm of a 3D vector
