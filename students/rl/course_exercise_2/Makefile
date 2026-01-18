@@ -30,13 +30,6 @@ mpi: nbody_bh_mpi
 nbody_bh_mpi: $(SRC_MPI)
 	$(MPIFC) $(FCFLAGS) -o $@ $(SRC_MPI)
 
-
-# Module dependencies
-#%.o: %.f90
-#	$(FC) $(FCFLAGS) -c $<
-
-## Utilities
-
 # Remove compiled files
 clean:
 	rm -f *.o *.mod nbody_bh nbody_bh_omp nbody_bh_mpi output.dat
@@ -50,5 +43,3 @@ test_omp: nbody_bh_omp
 
 test_mpi: nbody_bh_mpi
 	mpirun -np 4 ./nbody_bh_mpi < input.dat
-
-# Note: use 'make mpi' when using that. INCKUDE THIS LATER IN TUTORIAL
