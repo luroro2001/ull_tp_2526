@@ -78,7 +78,8 @@ This module is shared by all three implementations.
 
 ### **`sphere_generator.f90`**
 
-Generates random initial conditions for the simulation. 
+Generates random initial conditions for the simulation.  It is an adaptation of the code presented in page 74 of Ángel de Vicente's Técnicas Avanzadas de Programación course notes.
+
 - Particles are uniformly distributed inside a unit sphere
 - Velocities are initially set to zero
 - Mass is uniformly distributed
