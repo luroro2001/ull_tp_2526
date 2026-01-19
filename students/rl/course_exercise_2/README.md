@@ -123,7 +123,20 @@ echo N | ./generate_input > input.dat # N is the number of particles chosen by t
 
 Implements a distributed-memory version using MPI.
 
-**PENDING**: complete explanation once I've looked into why it doesn`t improve performance.
+1. MPI is used to distribute the particle set evenly across processes
+
+2. The master process reads the input data and broadcasts it to all other processes
+
+3. Each process computes forces and updates positions for its local subset of particles
+
+4. Particle positions are synchronized at every time step using collective communication
+
+5. The Barnes–Hut tree is rebuilt globally after each synchronization
+
+6. Time integration is performed
+
+7. Only the master process writes output and reports the total execution time using `MPI_Wtime`
+
 
 ## Tutorial
 
