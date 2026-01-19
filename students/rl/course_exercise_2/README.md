@@ -164,7 +164,15 @@ mpirun -np 4 ./nbody_bh_mpi < input.dat # to run with 4 processes
 
 ## Performance anaylisis
 
-Let's now compare the performance of serial, OpenMP, and MPI implementations for different numbers of particles. The results obtained (which can also be found in timings.txt) are summarized in the figure below.
+Let's now compare the performance of serial, OpenMP, and MPI implementations for different numbers of particles. The results obtained (which can also be found in timings.txt) for particle counts ranging from N=10 to N=5000 are summarized in the figure below.
 
-<img width="2400" height="1800" alt="time_plot" src="https://github.com/user-attachments/assets/84da2598-fa41-4da4-b4bc-30bdf493fc89" />
+<img width="1200" height="900" alt="time_plot" src="https://github.com/user-attachments/assets/84da2598-fa41-4da4-b4bc-30bdf493fc89" />
 
+
+For N=10, the serial version seems to perform best. Bith OpenMP and MPI show a worse performance, possibly because the overhead associated with the thread creation, synchronization, and MPI communication dominates the actual computation. In this regime, parallelization is seemingly not beneficial.
+
+For slightly larger counts, such as N=100, the performance of all versions becomes comparable. OpenMP with multiple threads and MPI with multiple processes begin to reduce execution time, but the gains remain modest, indicating that parallel overhead is still significant relative to the computational workload.
+
+As N increases to 500 and 1000, clear performance trends emerge. The serial execution time grows, while the MPI version with multiple processes consistently outperforms both the serial and OpenMP implementations. This reflects the higher scalability of the distributed-memory approach, where the force computation is effectively partitioned across processes. OpenMP shows some speedup when increasing the number of threads, but its performance is generally limited in comparison.
+
+For the largest case, N=5000, MPI with 2 processes achieves the best performance overall, significantly reducing execution time compared to both the serial and OpenMP versions. MPI with 4 processes does not improve further and even degrades performance, maybe suggesting that communication and synchronization costs begin to outweigh the benefits of additional parallelism for this particle count and implementation. OpenMP apparently exhibits limited scalability at large N, with execution times remaining close to or worse than the serial case.
