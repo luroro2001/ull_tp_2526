@@ -184,7 +184,7 @@ Let's now compare the performance of serial, OpenMP, and MPI implementations for
 <img width="1200" height="900" alt="time_plot" src="https://github.com/user-attachments/assets/84da2598-fa41-4da4-b4bc-30bdf493fc89" />
 
 
-For N=10, the serial version seems to perform best. Bith OpenMP and MPI show a worse performance, possibly because the overhead associated with the thread creation, synchronization, and MPI communication dominates the actual computation. In this regime, parallelization is seemingly not beneficial.
+For N=10, the serial version seems to perform best. Both OpenMP and MPI show a worse performance, possibly because the overhead associated with the thread creation, synchronization, and MPI communication dominates the actual computation. In this regime, parallelization is seemingly not beneficial.
 
 For slightly larger counts, such as N=100, the performance of all versions becomes comparable. OpenMP with multiple threads and MPI with multiple processes begin to reduce execution time, but the gains remain modest, indicating that parallel overhead is still significant relative to the computational workload.
 
